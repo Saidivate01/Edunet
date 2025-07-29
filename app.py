@@ -2,56 +2,31 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-# Load the trained model
+# Load model
 model = joblib.load("best_model.pkl")
 
-st.set_page_config(page_title="Employee Salary Classification", page_icon="💼", layout="centered")
+# Input from user
+years_experience = st.number_input("Years of Experience", min_value=0.0, step=0.1)
+age = st.number_input("Age", min_value=18, max_value=70, step=1)
+education_level = st.selectbox("Education Level", ["High School", "Bachelors", "Masters", "PhD"])
 
-st.title("💼 Employee Salary Classification App")
-st.markdown("Predict whether an employee earns >50K or ≤50K based on input features.")
+# One-hot encoding or manual mapping if required
+education_mapping = {
+    "High School": 0,
+    "Bachelors": 1,
+    "Masters": 2,
+    "PhD": 3
+}
+education_level_encoded = education_mapping[education_level]
 
-# Sidebar inputs (these must match your training feature columns)
-st.sidebar.header("Input Employee Details")
+# Construct input DataFrame with EXACT same feature names used in training
+input_df = pd.DataFrame([{
+    "YearsExperience": years_experience,
+    "Age": age,
+    "EducationLevel": education_level_encoded
+}])
 
-age = st.sidebar.slider("Age", 18, 75, 30)
-education_num = st.sidebar.slider("Educational Number (5–16)", 5, 16, 10)
-occupation = st.sidebar.slider("Occupation (Encoded 0–13)", 0, 13, 5)
-hours_per_week = st.sidebar.slider("Hours per week", 1, 80, 40)
-workclass = st.sidebar.slider("Workclass (Encoded 0–6)", 0, 6, 3)
-gender = st.sidebar.selectbox("Gender", ["Male", "Female"])
-gender = 1 if gender == "Male" else 0
-
-# Input data must match training feature names and order
-input_df = pd.DataFrame({
-    'age': [age],
-    'educational-num': [education_num],
-    'occupation': [occupation],
-    'hours-per-week': [hours_per_week],
-    'workclass': [workclass],
-    'gender': [gender]
-})
-
-
-st.write("### 🔎 Input Data")
-st.write(input_df)
-
-# Predict button
-if st.button("Predict Salary Class"):
+# Predict
+if st.button("Predict Salary"):
     prediction = model.predict(input_df)
-    st.success(f"✅ Prediction: {prediction[0]}")
-
-# Batch prediction
-st.markdown("---")
-st.markdown("#### 📂 Batch Prediction")
-uploaded_file = st.file_uploader("Upload a CSV file for batch prediction", type="csv")
-
-if uploaded_file is not None:
-    batch_data = pd.read_csv(uploaded_file)
-    st.write("Uploaded data preview:", batch_data.head())
-    batch_preds = model.predict(batch_data)
-    batch_data['PredictedClass'] = batch_preds
-    st.write("✅ Predictions:")
-    st.write(batch_data.head())
-    csv = batch_data.to_csv(index=False).encode('utf-8')
-    st.download_button("Download Predictions CSV", csv, file_name='predicted_classes.csv', mime='text/csv')
-
+    st.success(f"Predicted Salary: ₹{prediction[0]:,.2f}")
