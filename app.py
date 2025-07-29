@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import joblib
@@ -13,17 +14,39 @@ st.markdown("Predict whether an employee earns >50K or ≤50K based on input fea
 # Sidebar inputs
 st.sidebar.header("Input Employee Details")
 
+# Education mapping
+education_mapping = {
+    1: 'Preschool', 2: '1st-4th', 3: '5th-6th', 4: '7th-8th', 5: '9th',
+    6: '10th', 7: '11th', 8: '12th', 9: 'HS-grad', 10: 'Some-college',
+    11: 'Assoc-voc', 12: 'Assoc-acdm', 13: 'Bachelors', 14: 'Masters',
+    15: 'Prof-school', 16: 'Doctorate'
+}
+
+# Occupation mapping
+occupation_mapping = {
+    0: '?', 1: 'Cambodia', 2: 'Canada', 3: 'China', 4: 'Columbia',
+    5: 'Cuba', 6: 'Dominican-Republic', 7: 'Ecuador', 8: 'El-Salvador',
+    9: 'England', 10: 'France', 11: 'Germany', 12: 'Greece',
+    13: 'Guatemala', 14: 'Haiti'
+}
+
+
 age = st.sidebar.slider("Age", 18, 65, 30)
-educational_num = st.sidebar.slider("Education Level (numerical)", 1, 16, 10)
-occupation = st.sidebar.slider("Occupation (numerical)", 0, 14, 7)
+education_label = st.sidebar.selectbox("Education Level", list(education_mapping.values()))
+occupation_label = st.sidebar.selectbox("Occupation", list(occupation_mapping.values()))
 hours_per_week = st.sidebar.slider("Hours per week", 1, 80, 40)
 experience = st.sidebar.slider("Years of Experience", 0, 40, 5)
+
+# Get the numerical value from the label
+education_num = [k for k, v in education_mapping.items() if v == education_label][0]
+occupation_num = [k for k, v in occupation_mapping.items() if v == occupation_label][0]
+
 
 # Build input DataFrame
 input_df = pd.DataFrame({
     'age': [age],
-    'educational-num': [educational_num],
-    'occupation': [occupation],
+    'educational-num': [education_num],
+    'occupation': [occupation_num],
     'hours-per-week': [hours_per_week],
     'experience': [experience]
 })
