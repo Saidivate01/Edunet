@@ -24,10 +24,21 @@ education_mapping = {
 
 # Occupation mapping
 occupation_mapping = {
-    0: '?', 1: 'Cambodia', 2: 'Canada', 3: 'China', 4: 'Columbia',
-    5: 'Cuba', 6: 'Dominican-Republic', 7: 'Ecuador', 8: 'El-Salvador',
-    9: 'England', 10: 'France', 11: 'Germany', 12: 'Greece',
-    13: 'Guatemala', 14: 'Haiti'
+ 0: 'Adm-clerical',
+ 1: 'Armed-Forces',
+ 2: 'Craft-repair',
+ 3: 'Exec-managerial',
+ 4: 'Farming-fishing',
+ 5: 'Handlers-cleaners',
+ 6: 'Machine-op-inspct',
+ 7: 'Other-service',
+ 8: 'Priv-house-serv',
+ 9: 'Prof-specialty',
+ 10: 'Protective-serv',
+ 11: 'Sales',
+ 12: 'Tech-support',
+ 13: 'Transport-moving',
+ 14: 'Others'
 }
 
 
